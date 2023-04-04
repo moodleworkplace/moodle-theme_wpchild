@@ -149,6 +149,7 @@ function theme_wpchild_process_tenant_edit_css_requests(stdClass $data): void {
 function theme_wpchild_tenant_get_theme_scss(\tool_tenant\tenant $tenant): string {
     $scss = '';
     $scss .= manager::get_tenant_scss_for_file($tenant, 'pattern');
+    $scss .= manager::get_tenant_custom_scss($tenant);
 
     return $scss;
 }

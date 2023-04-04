@@ -47,4 +47,17 @@ class manager {
 
         return $scss;
     }
+
+    /**
+     * Load custom tenant SCSS from file
+     *
+     * @param \tool_tenant\tenant $tenant
+     * @return string
+     */
+    public static function get_tenant_custom_scss(\tool_tenant\tenant $tenant): string {
+        global $CFG;
+
+        $filename = $tenant->get('idnumber') ?? $tenant->get('id');
+        return file_get_contents("{$CFG->dirroot}/theme/wpchild/scss/tenant/{$filename}.scss") ?: '';
+    }
 }

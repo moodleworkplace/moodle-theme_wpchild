@@ -15,22 +15,26 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Plugin strings are defined here.
+ * Plugin settings.
  *
  * @package    theme_wpchild
- * @category   string
  * @copyright  2023 Mikel Martín <mikel@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or late
  */
 
-defined('MOODLE_INTERNAL') || die();
+defined('MOODLE_INTERNAL') || die;
 
-$string['choosereadme'] = 'Welcome to Workplace child theme example.';
-$string['pluginname'] = 'Workplace child theme';
-$string['privacy:metadata'] = 'The Workplace child theme does not store any personal data about any user.';
-$string['rawscss'] = 'Raw SCSS';
-$string['rawscss_desc'] = 'Use this field to provide SCSS or CSS code which will be injected at the end of the style sheet.';
-$string['rawscsspre'] = 'Raw initial SCSS';
-$string['rawscsspre_desc'] = 'In this field you can provide initialising SCSS code, it will be injected before everything else. Most of the time you will use this setting to define variables.';
-$string['region-content'] = 'Content';
-$string['region-side-pre'] = 'Right';
+if ($ADMIN->fulltree) {
+
+    // Raw SCSS to include before the content.
+    $setting = new admin_setting_scsscode('theme_wpchild/scsspre', get_string('rawscsspre', 'theme_wpchild'),
+        get_string('rawscsspre_desc', 'theme_wpchild'), '', PARAM_RAW);
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $settings->add($setting);
+
+    // Raw SCSS to include after the content.
+    $setting = new admin_setting_scsscode('theme_wpchild/scss', get_string('rawscss', 'theme_wpchild'),
+        get_string('rawscss_desc', 'theme_wpchild'), '', PARAM_RAW);
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $settings->add($setting);
+}

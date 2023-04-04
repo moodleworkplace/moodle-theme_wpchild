@@ -62,7 +62,12 @@ function theme_wpchild_alter_css_urls(&$urls) {
  * @return string
  */
 function theme_wpchild_get_pre_scss($theme) {
-    return '';
+    $scss = '';
+    // Prepend pre-scss.
+    if (!empty($theme->settings->scsspre)) {
+        $scss .= $theme->settings->scsspre;
+    }
+    return $scss;
 }
 
 /**
@@ -72,5 +77,10 @@ function theme_wpchild_get_pre_scss($theme) {
  * @return string
  */
 function theme_wpchild_get_extra_scss($theme) {
-    return '';
+    $scss = '';
+    // Append extra-scss.
+    if (!empty($theme->settings->scss)) {
+        $scss .= $theme->settings->scss;
+    }
+    return $scss;
 }

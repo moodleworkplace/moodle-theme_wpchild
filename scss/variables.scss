@@ -1,0 +1,13 @@
+/**
+ Workplace child variables
+ */
+
+/* Ubuntu font */
+@import "fonts";
+// stylelint-disable max-line-length
+$font-family-sans-serif: 'Ubuntu', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !default;
+// stylelint-enable max-line-length
+
+/* Disable rounded borders */
+$enable-rounded: false;
+$course-content-maxwidth: 1024px;

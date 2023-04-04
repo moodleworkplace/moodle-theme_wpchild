@@ -22,8 +22,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or late
  */
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Implementation of $THEME->scss
  *
@@ -35,8 +33,14 @@ function theme_wpchild_get_main_scss_content($theme) {
 
     $scss = '';
 
+    // Load Workplace child specific scss variables (loaded first to override Workplace and LMS variables).
+    $scss .= file_get_contents($CFG->dirroot . '/theme/wpchild/scss/variables.scss');
+
     // Add Workplace SCSS.
     $scss .= theme_workplace_get_main_scss_content($theme);
+
+    // Load Workplace child scss.
+    $scss .= file_get_contents($CFG->dirroot . '/theme/wpchild/scss/default.scss');
 
     return $scss;
 }
@@ -48,7 +52,7 @@ function theme_wpchild_get_main_scss_content($theme) {
  * @param moodle_url[] $urls
  */
 function theme_wpchild_alter_css_urls(&$urls) {
-    \theme_workplace\manager::alter_css_urls($urls, 'workplacechild');
+    \theme_workplace\manager::alter_css_urls($urls, 'wpchild');
 }
 
 /**

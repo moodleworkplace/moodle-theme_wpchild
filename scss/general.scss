@@ -1,3 +1,9 @@
 /**
  General styles
  */
+
+// Backgroupd pattern image (from setting).
+$pattern: null !default;
+body {
+    background-image: url($pattern);
+}

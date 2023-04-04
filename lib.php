@@ -22,6 +22,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or late
  */
 
+use theme_wpchild\manager;
+
 /**
  * Implementation of $THEME->scss
  *
@@ -83,4 +85,96 @@ function theme_wpchild_get_extra_scss($theme) {
         $scss .= $theme->settings->scss;
     }
     return $scss;
+}
+
+/**
+ * Add extra element to tenant branding settings.
+ * {@see \tool_tenant\form\edit_css_form::definition()}
+ *
+ * @param tool_tenant\form\edit_css_form $form
+ * @param MoodleQuickForm $mform
+ * @param array $ajaxformdata
+ *
+ */
+function theme_wpchild_extend_tenant_edit_css_form(tool_tenant\form\edit_css_form $form, MoodleQuickForm $mform,
+        array $ajaxformdata): void {
+    $filemanageroptions = [
+        'accepted_types' => ['web_image'],
+        'maxbytes' => 0,
+        'subdirs' => 0,
+        'maxfiles' => 1
+    ];
+    $mform->addElement('filemanager', 'pattern', get_string('backgroundpattern', 'theme_wpchild'), '', $filemanageroptions);
+}
+
+/**
+ * Callback for tenant get css config.
+ * {@see \tool_tenant\manager::get_css_config()}
+ *
+ * @param array $info
+ * @param int $tenantid
+ * @param array $filemanageroptions
+ */
+function theme_wpchild_tenant_get_css_config(array &$info, int $tenantid, array $filemanageroptions): void {
+    $filemanageroptions = [
+        'accepted_types' => ['web_image'],
+        'maxbytes' => 0,
+        'subdirs' => 0,
+        'maxfiles' => 1
+    ];
+    $context = \context_system::instance();
+    $draftitemid = \file_get_submitted_draft_itemid('pattern');
+    \file_prepare_draft_area($draftitemid, $context->id, 'theme_wpchild', 'pattern', $tenantid, $filemanageroptions);
+    $info['pattern'] = $draftitemid;
+}
+
+/**
+ * Callback for tenant get css config.
+ * {@see \tool_tenant\form\edit_css_form::process_dynamic_submission()}
+ *
+ * @param stdClass $data
+ */
+function theme_wpchild_process_tenant_edit_css_requests(stdClass $data): void {
+    file_save_draft_area_files($data->pattern, \context_system::instance()->id, 'theme_wpchild', 'pattern', $data->tenantid);
+    unset($data->pattern);
+}
+
+/**
+ * Callback for tenant get theme SCSS.
+ * {@see \tool_tenant\manager::get_theme_scss()}
+ *
+ * @param \tool_tenant\tenant $tenant
+ * @return string
+ */
+function theme_wpchild_tenant_get_theme_scss(\tool_tenant\tenant $tenant): string {
+    $scss = '';
+    $scss .= manager::get_tenant_scss_for_file($tenant, 'pattern');
+
+    return $scss;
+}
+
+/**
+ * Serves files.
+ *
+ * @param stdClass $course
+ * @param stdClass $cm
+ * @param context $context
+ * @param string $filearea
+ * @param array $args
+ * @param bool $forcedownload
+ * @return bool|null false if file not found, does not return anything if found - just send the file
+ */
+function theme_wpchild_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload) {
+    global $CFG;
+
+    require_once($CFG->libdir . '/filelib.php');
+    if ($filearea === 'pattern') {
+        $relativepath = implode('/', $args);
+        $fullpath = '/' . $context->id . '/theme_wpchild/' . $filearea . '/' . $relativepath;
+        $fs = get_file_storage();
+        if (!($file = $fs->get_file_by_hash(sha1($fullpath))) || $file->is_directory()) {
+            return false;
+        }
+        send_stored_file($file, 0, 0, $forcedownload);
+    }
 }

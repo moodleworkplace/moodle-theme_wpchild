@@ -25,6 +25,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+$string['backgroundpattern'] = 'Background patttern';
 $string['choosereadme'] = 'Welcome to Workplace child theme example.';
 $string['pluginname'] = 'Workplace child theme';
 $string['privacy:metadata'] = 'The Workplace child theme does not store any personal data about any user.';

@@ -31,7 +31,7 @@ class manager {
      * @param string $filename
      * @return string SCSS defining file variable.
      */
-    public static function get_tenant_scss_for_file(\tool_tenant\tenant $tenant, string $filename): string {
+    protected static function get_tenant_scss_for_file(\tool_tenant\tenant $tenant, string $filename): string {
         $scss = '';
 
         $tenantid = $tenant->get('id');
@@ -49,15 +49,21 @@ class manager {
     }
 
     /**
-     * Load custom tenant SCSS from file
+     * Adds custom SCSS
      *
-     * @param \tool_tenant\tenant $tenant
+     * @param theme_config|null $theme
      * @return string
      */
-    public static function get_tenant_custom_scss(\tool_tenant\tenant $tenant): string {
-        global $CFG;
+    public static function get_custom_scss($theme): string {
+        $tenantid = !empty($theme->settings->tenantid) ? $theme->settings->tenantid : 0;
+        if (!$tenantid || !array_key_exists($tenantid, \tool_tenant\tenancy::get_tenants())
+                || $tenantid == \tool_tenant\sharedspace::get_shared_space_id()) {
+            $tenantid = \tool_tenant\tenancy::get_default_tenant_id();
+        }
+        $tenant = (new \tool_tenant\manager())->get_tenant($tenantid);
 
-        $filename = $tenant->get('idnumber') ?? $tenant->get('id');
-        return file_get_contents("{$CFG->dirroot}/theme/wpchild/scss/tenant/{$filename}.scss") ?: '';
+        $scss = '';
+        $scss .= self::get_tenant_scss_for_file($tenant, 'pattern');
+        return $scss;
     }
 }

@@ -38,6 +38,9 @@ function theme_wpchild_get_main_scss_content($theme) {
     // Load Workplace child specific scss variables (loaded first to override Workplace and LMS variables).
     $scss .= file_get_contents($CFG->dirroot . '/theme/wpchild/scss/variables.scss');
 
+    // Special tenant SCSS added by this theme.
+    $scss .= manager::get_custom_scss($theme);
+
     // Add Workplace SCSS.
     $scss .= theme_workplace_get_main_scss_content($theme);
 
@@ -54,7 +57,7 @@ function theme_wpchild_get_main_scss_content($theme) {
  * @param moodle_url[] $urls
  */
 function theme_wpchild_alter_css_urls(&$urls) {
-    \theme_workplace\manager::alter_css_urls($urls, 'wpchild');
+    \theme_workplace\manager::alter_css_urls($urls);
 }
 
 /**
@@ -80,6 +83,7 @@ function theme_wpchild_get_pre_scss($theme) {
  */
 function theme_wpchild_get_extra_scss($theme) {
     $scss = '';
+    $scss .= manager::get_custom_scss($theme);
     // Append extra-scss.
     if (!empty($theme->settings->scss)) {
         $scss .= $theme->settings->scss;
@@ -137,21 +141,6 @@ function theme_wpchild_tenant_get_css_config(array &$info, int $tenantid, array 
 function theme_wpchild_process_tenant_edit_css_requests(stdClass $data): void {
     file_save_draft_area_files($data->pattern, \context_system::instance()->id, 'theme_wpchild', 'pattern', $data->tenantid);
     unset($data->pattern);
-}
-
-/**
- * Callback for tenant get theme SCSS.
- * {@see \tool_tenant\manager::get_theme_scss()}
- *
- * @param \tool_tenant\tenant $tenant
- * @return string
- */
-function theme_wpchild_tenant_get_theme_scss(\tool_tenant\tenant $tenant): string {
-    $scss = '';
-    $scss .= manager::get_tenant_scss_for_file($tenant, 'pattern');
-    $scss .= manager::get_tenant_custom_scss($tenant);
-
-    return $scss;
 }
 
 /**

@@ -8,7 +8,11 @@ services:
 
 variables:
   MOODLE_REPO: git@git.in.moodle.com:workplace/workplacedev.git
-  MOODLE_BRANCH: master
+  MOODLE_BRANCH_WORKPLACE_MASTER: master
+  MOODLE_BRANCH_WORKPLACE402S: WORKPLACE_402
+  MOODLE_BRANCH_WORKPLACE401R: WORKPLACE_ROLLING_401
+  MOODLE_BRANCH_WORKPLACE401S: WORKPLACE_401
+  # MOODLE_BRANCH: master
   MOODLE_BEHAT_WDHOST: "http://selenium-standalone-chrome:4444/wd/hub"
   POSTGRES_USER: postgres
   POSTGRES_PASSWORD: ""
@@ -17,18 +21,16 @@ variables:
   DB: "pgsql"
 #  DB: "mysqli"
 
-before_script:
-- . prepare-workplace $cibot_sshkey
-- cd $CI_PROJECT_DIR/..
-- moodle-plugin-ci add-plugin --clone git@git.in.moodle.com:workplace/moodle-tool_wp.git
-- moodle-plugin-ci add-plugin --clone git@git.in.moodle.com:workplace/moodle-tool_tenant.git
-- moodle-plugin-ci add-plugin --clone git@git.in.moodle.com:workplace/moodle-theme_workplace.git
-- moodle-plugin-ci install --db-host="$DB_HOST" -vvv
-- php -S ${IPADDRESS}:8000 -t $CI_PROJECT_DIR/../moodle > /dev/null 2>&1 &
-- cd moodle
-
-jobtest:
+.scriptshorttest: &scriptshorttest
   script:
+  - . prepare-workplace $cibot_sshkey
+  - cd $CI_PROJECT_DIR/..
+  - moodle-plugin-ci add-plugin --clone git@git.in.moodle.com:workplace/moodle-tool_wp.git --branch $MOODLE_BRANCH
+  - moodle-plugin-ci add-plugin --clone git@git.in.moodle.com:workplace/moodle-tool_tenant.git --branch $MOODLE_BRANCH
+  - moodle-plugin-ci add-plugin --clone git@git.in.moodle.com:workplace/moodle-theme_workplace.git --branch $MOODLE_BRANCH
+  - moodle-plugin-ci install --db-host="$DB_HOST" -vvv
+  - php -S ${IPADDRESS}:8000 -t $CI_PROJECT_DIR/../moodle > /dev/null 2>&1 &
+  - cd moodle
   - . check-start
   - . check no_workplace_licenses
   - . check this_plugin_is_part_of "the theme_wpchild plugin for Moodle - http://moodle.org/" --nowplicensecomment
@@ -52,3 +54,39 @@ jobtest:
   - . check-finish
   except:
   - tags
+
+wpmaster:
+  before_script:
+    - export MOODLE_BRANCH=$MOODLE_BRANCH_WORKPLACE_MASTER
+  <<: *scriptshorttest
+  except:
+    - master
+    - tags
+    - /^WORKPLACE_\d+$/
+
+wp402s:
+  before_script:
+    - export MOODLE_BRANCH=$MOODLE_BRANCH_WORKPLACE402S
+  <<: *scriptshorttest
+  except:
+    - master
+    - tags
+    - /^WORKPLACE_\d+$/
+
+wp401r:
+  before_script:
+    - export MOODLE_BRANCH=$MOODLE_BRANCH_WORKPLACE401R
+  <<: *scriptshorttest
+  except:
+    - master
+    - tags
+    - /^WORKPLACE_\d+$/
+
+wp401s:
+  before_script:
+    - export MOODLE_BRANCH=$MOODLE_BRANCH_WORKPLACE401S
+  <<: *scriptshorttest
+  except:
+    - master
+    - tags
+    - /^WORKPLACE_\d+$/

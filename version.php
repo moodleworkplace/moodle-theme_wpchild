@@ -28,8 +28,8 @@ defined('MOODLE_INTERNAL') || die();
 $plugin->component    = 'theme_wpchild';
 $plugin->release      = '4.2dev';
 $plugin->version      = 2023050400;
-$plugin->requires     = 2022112800.00;
+$plugin->requires     = 2022112804.00;
 $plugin->maturity     = MATURITY_STABLE;
 $plugin->dependencies = [
-    'theme_workplace'     => 2022112800,
+    'theme_workplace'     => 2023011141,
 ];

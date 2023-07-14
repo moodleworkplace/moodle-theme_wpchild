@@ -24,10 +24,9 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-// This plugin is part of Moodle Workplace product.
 $plugin->component    = 'theme_wpchild';
-$plugin->release      = '4.2dev';
-$plugin->version      = 2023050400;
+$plugin->release      = '4.2';
+$plugin->version      = 2023071700;
 $plugin->requires     = 2022112804.00;
 $plugin->maturity     = MATURITY_STABLE;
 $plugin->dependencies = [

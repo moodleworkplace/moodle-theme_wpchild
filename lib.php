@@ -27,7 +27,7 @@ use theme_wpchild\manager;
 /**
  * Implementation of $THEME->scss
  *
- * @param theme_config $theme The theme config object.
+ * @param \theme_config $theme The theme config object.
  * @return string
  */
 function theme_wpchild_get_main_scss_content($theme) {

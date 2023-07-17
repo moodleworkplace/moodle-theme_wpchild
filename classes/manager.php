@@ -51,7 +51,7 @@ class manager {
     /**
      * Adds custom SCSS
      *
-     * @param theme_config|null $theme
+     * @param \theme_config|null $theme
      * @return string
      */
     public static function get_custom_scss($theme): string {

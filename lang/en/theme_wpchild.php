@@ -27,8 +27,8 @@ defined('MOODLE_INTERNAL') || die();
 
 $string['backgroundpattern'] = 'Background pattern';
 $string['choosereadme'] = 'Welcome to Workplace child theme example.';
-$string['pluginname'] = 'Workplace child theme';
-$string['privacy:metadata'] = 'The Workplace child theme does not store any personal data about any user.';
+$string['pluginname'] = 'Workplace child theme example';
+$string['privacy:metadata'] = 'The Workplace child theme example does not store any personal data about any user.';
 $string['rawscss'] = 'Raw SCSS';
 $string['rawscss_desc'] = 'Use this field to provide SCSS or CSS code which will be injected at the end of the style sheet.';
 $string['rawscsspre'] = 'Raw initial SCSS';

@@ -106,7 +106,7 @@ function theme_wpchild_extend_tenant_edit_css_form(tool_tenant\form\edit_css_for
         'accepted_types' => ['web_image'],
         'maxbytes' => 0,
         'subdirs' => 0,
-        'maxfiles' => 1
+        'maxfiles' => 1,
     ];
     $mform->addElement('filemanager', 'pattern', get_string('backgroundpattern', 'theme_wpchild'), '', $filemanageroptions);
 }
@@ -124,7 +124,7 @@ function theme_wpchild_tenant_get_css_config(array &$info, int $tenantid, array 
         'accepted_types' => ['web_image'],
         'maxbytes' => 0,
         'subdirs' => 0,
-        'maxfiles' => 1
+        'maxfiles' => 1,
     ];
     $context = \context_system::instance();
     $draftitemid = \file_get_submitted_draft_itemid('pattern');

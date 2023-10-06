@@ -51,7 +51,7 @@ $THEME->iconsystem = \core\output\icon_system::FONTAWESOME;
 $THEME->usescourseindex = true;
 $THEME->haseditswitch = true;
 $THEME->activityheaderconfig = [
-    'notitle' => true
+    'notitle' => true,
 ];
 
 // Make sure the Site Home is not shown on the primary navigation.

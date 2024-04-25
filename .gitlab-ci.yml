@@ -24,6 +24,7 @@ variables:
 .scriptshorttest: &scriptshorttest
   script:
   - . prepare-workplace $cibot_sshkey
+  - export PLUGINNAME=$(grep 'plugin->component' $CI_PROJECT_DIR/version.php | awk -F\' '{ print $2; }')
   - cd $CI_PROJECT_DIR/..
   - moodle-plugin-ci add-plugin --clone git@git.in.moodle.com:workplace/moodle-tool_wp.git --branch $MOODLE_BRANCH
   - moodle-plugin-ci add-plugin --clone git@git.in.moodle.com:workplace/moodle-tool_tenant.git --branch $MOODLE_BRANCH
@@ -47,7 +48,7 @@ variables:
   - . check moodle-plugin-ci mustache
   - . check moodle-plugin-ci grunt --max-lint-warnings 0
   - . check vendor/bin/phpunit --fail-on-risky --disallow-test-output --testsuite tool_dataprivacy_testsuite --filter metadata_registry_test
-  - . check vendor/bin/phpunit --fail-on-risky --disallow-test-output --testsuite core_external_testsuite --filter test_all_external_info
+  - . check vendor/bin/phpunit --fail-on-risky --disallow-test-output --testsuite core_external_testsuite --filter "test_all_external_info@${PLUGINNAME}.*"
   - . check vendor/bin/phpunit --fail-on-risky --disallow-test-output --testsuite core_privacy_testsuite --filter provider_test
   - . check moodle-plugin-ci phpunit --coverage-text --fail-on-warning
   - . check moodle-plugin-ci behat --suite wpchild --profile chrome

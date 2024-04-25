@@ -2,11 +2,11 @@
 Feature: Theme wpchild overview test
   To navigate in wpchild theme I need to make sure standard steps work
 
-  Scenario: Testing basic steps in wpchild theme
+  Scenario: Testing basic steps in wpchild theme do not throw error.
     And I log in as "admin"
     And I set the following administration settings values:
       | contactdataprotectionofficer | 1 |
-    And I navigate to "Appearance > Themes > Theme settings" in site administration
+    And I navigate to "Appearance > Themes" in site administration
     And I log out
 
   Scenario: Testing workplace launcher in wpchild theme

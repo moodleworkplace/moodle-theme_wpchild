@@ -25,8 +25,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component    = 'theme_wpchild';
-$plugin->release      = '4.2.3';
-$plugin->version      = 2023101000;
+$plugin->release      = '4.4';
+$plugin->version      = 2024042500;
 $plugin->requires     = 2022112804.00;
 $plugin->maturity     = MATURITY_STABLE;
 $plugin->dependencies = [

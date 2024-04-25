@@ -25,16 +25,19 @@
 defined('MOODLE_INTERNAL') || die;
 
 if ($ADMIN->fulltree) {
+    $page = new admin_settingpage('themesettingwpchild_page', get_string('pluginname', 'theme_wpchild'));
+    $settings = new theme_boost_admin_settingspage_tabs('themesettingwpchild', get_string('pluginname', 'theme_wpchild'));
 
     // Raw SCSS to include before the content.
     $setting = new admin_setting_scsscode('theme_wpchild/scsspre', get_string('rawscsspre', 'theme_wpchild'),
         get_string('rawscsspre_desc', 'theme_wpchild'), '', PARAM_RAW);
     $setting->set_updatedcallback('theme_reset_all_caches');
-    $settings->add($setting);
+    $page->add($setting);
 
     // Raw SCSS to include after the content.
     $setting = new admin_setting_scsscode('theme_wpchild/scss', get_string('rawscss', 'theme_wpchild'),
         get_string('rawscss_desc', 'theme_wpchild'), '', PARAM_RAW);
     $setting->set_updatedcallback('theme_reset_all_caches');
-    $settings->add($setting);
+    $page->add($setting);
+    $settings->add($page);
 }

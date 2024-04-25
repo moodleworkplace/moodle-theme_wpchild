@@ -1,4 +1,4 @@
-image: moodlehq/moodle-workplace-plugin-ci:8.0-ci4.1.5
+image: moodlehq/moodle-workplace-plugin-ci:8.1
 
 services:
 - postgres:13
@@ -8,11 +8,11 @@ services:
 
 variables:
   MOODLE_REPO: git@git.in.moodle.com:workplace/workplacedev.git
-  MOODLE_BRANCH_WORKPLACE_MASTER: master
+  MOODLE_BRANCH_WORKPLACE404R: WORKPLACE_ROLLING_404
+  MOODLE_BRANCH_WORKPLACE403R: WORKPLACE_ROLLING_403
+  MOODLE_BRANCH_WORKPLACE403S: WORKPLACE_403
   MOODLE_BRANCH_WORKPLACE402S: WORKPLACE_402
-  MOODLE_BRANCH_WORKPLACE401R: WORKPLACE_ROLLING_401
   MOODLE_BRANCH_WORKPLACE401S: WORKPLACE_401
-  # MOODLE_BRANCH: master
   MOODLE_BEHAT_WDHOST: "http://selenium-standalone-chrome:4444/wd/hub"
   POSTGRES_USER: postgres
   POSTGRES_PASSWORD: ""
@@ -24,6 +24,7 @@ variables:
 .scriptshorttest: &scriptshorttest
   script:
   - . prepare-workplace $cibot_sshkey
+  - export PLUGINNAME=$(grep 'plugin->component' $CI_PROJECT_DIR/version.php | awk -F\' '{ print $2; }')
   - cd $CI_PROJECT_DIR/..
   - moodle-plugin-ci add-plugin --clone git@git.in.moodle.com:workplace/moodle-tool_wp.git --branch $MOODLE_BRANCH
   - moodle-plugin-ci add-plugin --clone git@git.in.moodle.com:workplace/moodle-tool_tenant.git --branch $MOODLE_BRANCH
@@ -47,7 +48,7 @@ variables:
   - . check moodle-plugin-ci mustache
   - . check moodle-plugin-ci grunt --max-lint-warnings 0
   - . check vendor/bin/phpunit --fail-on-risky --disallow-test-output --testsuite tool_dataprivacy_testsuite --filter metadata_registry_test
-  - . check vendor/bin/phpunit --fail-on-risky --disallow-test-output --testsuite core_external_testsuite --filter test_all_external_info
+  - . check vendor/bin/phpunit --fail-on-risky --disallow-test-output --testsuite core_external_testsuite --filter "test_all_external_info@${PLUGINNAME}.*"
   - . check vendor/bin/phpunit --fail-on-risky --disallow-test-output --testsuite core_privacy_testsuite --filter provider_test
   - . check moodle-plugin-ci phpunit --coverage-text --fail-on-warning
   - . check moodle-plugin-ci behat --suite wpchild --profile chrome
@@ -55,12 +56,30 @@ variables:
   except:
   - tags
 
-wpmaster:
+wp404r:
   before_script:
-    - export MOODLE_BRANCH=$MOODLE_BRANCH_WORKPLACE_MASTER
+    - export MOODLE_BRANCH=$MOODLE_BRANCH_WORKPLACE404R
   <<: *scriptshorttest
   except:
-    - master
+    - main
+    - tags
+    - /^WORKPLACE_\d+$/
+
+wp403r:
+  before_script:
+    - export MOODLE_BRANCH=$MOODLE_BRANCH_WORKPLACE403R
+  <<: *scriptshorttest
+  except:
+    - main
+    - tags
+    - /^WORKPLACE_\d+$/
+
+wp403s:
+  before_script:
+    - export MOODLE_BRANCH=$MOODLE_BRANCH_WORKPLACE403S
+  <<: *scriptshorttest
+  except:
+    - main
     - tags
     - /^WORKPLACE_\d+$/
 
@@ -69,16 +88,7 @@ wp402s:
     - export MOODLE_BRANCH=$MOODLE_BRANCH_WORKPLACE402S
   <<: *scriptshorttest
   except:
-    - master
-    - tags
-    - /^WORKPLACE_\d+$/
-
-wp401r:
-  before_script:
-    - export MOODLE_BRANCH=$MOODLE_BRANCH_WORKPLACE401R
-  <<: *scriptshorttest
-  except:
-    - master
+    - main
     - tags
     - /^WORKPLACE_\d+$/
 
@@ -87,6 +97,6 @@ wp401s:
     - export MOODLE_BRANCH=$MOODLE_BRANCH_WORKPLACE401S
   <<: *scriptshorttest
   except:
-    - master
+    - main
     - tags
     - /^WORKPLACE_\d+$/
